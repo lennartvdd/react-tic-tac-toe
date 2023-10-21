@@ -82,9 +82,9 @@ function calculateWinner(squares, solutions)
 function getSolutions(square_size)
 {
   //solutions: 
-  //all horizontal, for example: (0,1,2), (3,4,5), (6,7,8): (x=3: i+=3, j+=1)
-  //all vertical, for example: (0,3,6), (1,4,7) (2,5,8): (x=3: i+=1, j+=3)
-  //all diagonal, for example: (0,4,8), (2,4,6): (start top left = 0. 3 lines of 3. Diag lefttop>bottomright: start + line_length+1 + line_no. Diag righttop>bottomleft: start=line_length.  
+  //all horizontal, for example in 3x3: (0,1,2), (3,4,5), (6,7,8)
+  //all vertical, for example in 3x3: (0,3,6), (1,4,7) (2,5,8)
+  //all full diagonal, for example in 3x3: (0,4,8), (2,4,6)
 
   let horizontal_solutions = [];
   for(let x = 0; x < square_size; x++) {
