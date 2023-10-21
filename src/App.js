@@ -2,21 +2,27 @@ import { useState } from "react";
 
 export default function BoardApp() {
 
-  let square_size = 4;
-  let status;
+  let square_size = 3;
   
   const [squares, setSquares] = useState([...Array(Math.pow(square_size,2))].map((x,i) => null));
   const [x, setX] = useState(true);
   const solutions = getSolutions(square_size);
-  const winner = calculateWinner(squares, solutions);
 
-  if(winner) {
-    status = "Winner: " + winner;
+  const boardState = {
+    winner: calculateWinner(squares, solutions),
+    status: null
+  };
+
+  if(boardState.winner) {
+    boardState.status = "Winner: " + boardState.winner;
   } else {
-    status = 'Next player: ' + (x ? 'X':'O');
+    boardState.status = 'Next player: ' + (x ? 'X':'O');
   }
 
   function handleSquareClick(i) {
+    if(boardState.winner) {
+      return false;
+    }
     const nextSquares = squares.slice();
     if(nextSquares[i] == "X" || nextSquares[i] == "O" ) {
       return;
@@ -26,7 +32,14 @@ export default function BoardApp() {
     setX(!x);
   }
 
-  return <Board squares={squares} handleSquareClick={handleSquareClick} status={status}/>;
+  function handleResetClick() {
+    boardState.status = null;
+    boardState.winner = null;
+    setSquares([...Array(Math.pow(square_size,2))].map((x,i) => null));
+    setX(true);
+  }
+
+  return <Board squares={squares} boardState={boardState} handleSquareClick={handleSquareClick} handleResetClick={handleResetClick} />;
 }
 
 function Square({value, onSquareClick}) {
@@ -36,8 +49,10 @@ function BoardRow(props) {
   return <div className="board-row">{props.children}</div>;
 }
 
-function Board({squares, handleSquareClick, status}) {
+function Board({squares, boardState, handleSquareClick, handleResetClick}) {
 
+  let status = boardState.status;
+  let winner = boardState.winner;
   let square_size = Math.sqrt(squares.length);
   const rows = [];
   for(let i = 0; i < square_size; i++) {
@@ -51,6 +66,7 @@ function Board({squares, handleSquareClick, status}) {
   return <>
     <div className="status">{status}</div>
     {rows}
+    <button onClick={handleResetClick}>Reset</button>
   </>;
 }
 
